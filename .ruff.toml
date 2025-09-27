@@ -5,6 +5,11 @@ exclude = [
     ".venv",
 ]
 
+
+[lint.per-file-ignores]
+"tests.py" = ["S101"]
+
+
 [lint]
 select = ["ALL"]
 ignore = [
