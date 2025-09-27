@@ -1,0 +1,43 @@
+line-length = 79
+indent-width = 4
+
+exclude = [
+    ".venv",
+]
+
+[lint]
+select = ["ALL"]
+ignore = [
+    "ANN401",   # Dynamically typed expressions (typing.Any) are disallowed in `**handler_kwargs`
+    "D100",     # Missing docstring in public module
+    "D104",     # Missing docstring in public package
+    "COM812",   # Checks for the absence of trailing commas.
+    "EM101",    # Exception must not use a string literal, assign to variable first
+    "FA100",    # Add `from __future__ import annotations` to simplify `typing.Dict`
+    "FA102",    # Missing `from __future__ import annotations`, but uses PEP 604 union
+    "FIX001",   # Line contains FIXME, consider resolving the issue
+    "PLR0911",  # Too many return statements (X > 6)
+    "PLR0913",  # Too many arguments in function definition (X > 5)
+    "RUF022",   # `__all__` is not sorted - fixme later
+    "RUF023",   # `X.__slots__` is not sorted - fixme later
+    "TC001",    # Move application import `X` into a type-checking block
+    "TC003",    # Move standard library import `X` into a type-checking block
+    "TD001",    # Invalid TODO tag: `FIXME`
+    "TD002",    # Missing author in TODO
+    "TD003",    # Missing issue link on the line following this TODO
+    "TD005",    # Missing issue description after `TODO`
+    "UP006",    # Use `x` instead of `X` for type annotation
+    "UP035",    # Import from `X` instead: `X`
+    "RUF",      # Docstring contains ambiguous cyrillic letters
+    "DJ008",    # Model does not define `__str__` method
+    "D107",     #  Missing docstring in `__init__`
+    "D203",
+    "D213",
+]
+external = ["WPS"]
+fixable = ["ALL"]
+unfixable = []
+
+[format]
+quote-style = "double"
+indent-style = "space"

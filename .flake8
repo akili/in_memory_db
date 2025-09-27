@@ -1,0 +1,9 @@
+[flake8]
+max-returns = 2
+max-arguments = 4
+
+ignore = WPS229, WPS336
+
+max-cognitive-complexity = 6
+
+exclude = .venv
