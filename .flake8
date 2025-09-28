@@ -2,7 +2,7 @@
 max-returns = 2
 max-arguments = 4
 
-ignore = WPS229, WPS336, WPS421
+ignore = WPS229, WPS336, WPS421, WPS529, WPS115
 
 max-cognitive-complexity = 6
 
