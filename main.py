@@ -14,19 +14,23 @@ class TinyDB(cmd.Cmd):
         super().__init__()
         self.storage = {}
 
-    def cmdloop(self, intro: Any | None = None) -> None:
+    def run(self, intro: Any | None = None) -> None:
         """REPL для приложения."""
         try:
-            super().cmdloop(intro=intro)
+            super().cmdloop(intro=intro)  # noqa: WPS613
         except KeyboardInterrupt:
             # Выход по ctrl+c
-            print("\nПока!")
+            self.do_EXIT()
 
-    def do_EOF(self, _: str) -> bool:  # noqa: N802
+    def do_EOF(self, _: str) -> bool:
         """Выйти по ctrl+d."""
+        return self.do_EXIT()
+
+    def do_EXIT(self, _: str | None = None) -> bool:
+        """Выйти по команде."""
         print("\nПока!")
         return True
 
 
 if __name__ == "__main__":
-    TinyDB().cmdloop()
+    TinyDB().run()

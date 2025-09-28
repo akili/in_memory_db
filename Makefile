@@ -1,3 +1,8 @@
+.SILENT:
+
+run:
+	uv run main.py
+
 format:
 	uv run black .
 	uv run ruff format .
