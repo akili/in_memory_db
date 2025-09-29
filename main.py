@@ -1,4 +1,5 @@
 import cmd
+from contextlib import suppress
 from typing import Any
 
 
@@ -43,7 +44,12 @@ class TinyDB(cmd.Cmd):
 
     def do_SET(self, args: str) -> None:
         """Установить значение переменной."""
-        db_key, key_value = args.split()
+        try:
+            db_key, key_value = args.split()
+        except ValueError as err:
+            raise RuntimeError(
+                "Нужно ввести 2 аргумента: имя переменной и ее значение",
+            ) from err
         self.storage[-1][db_key] = key_value
 
     def do_GET(self, key: str) -> None:
@@ -71,6 +77,12 @@ class TinyDB(cmd.Cmd):
             raise RuntimeError("Нет ни одной транзакции для коммита")
         transaction_data = self.storage.pop()
         self.storage[-1].update(transaction_data)
+
+    def do_UNSET(self, key: str) -> None:
+        """Удаление переменной."""
+        if len(self.storage) == 1:
+            with suppress(KeyError):
+                del self.storage[-1][key]
 
 
 if __name__ == "__main__":

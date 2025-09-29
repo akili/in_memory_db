@@ -81,3 +81,27 @@ GET A
     captured = capsys.readouterr()
     assert "30" in captured.out
     assert "20" in captured.out
+
+
+def test_unset_command(capsys: CaptureFixture) -> None:
+    """Проверка получения переменной."""
+    app = TinyDB()
+
+    app.do_SET("A 222")
+    app.do_GET("A")
+    app.do_UNSET("A")
+    app.do_GET("A")
+
+    captured = capsys.readouterr()
+    assert "222" in captured.out
+    assert "NULL" in captured.out
+
+
+def test_unset_undefined_var_command(capsys: CaptureFixture) -> None:
+    """Проверка удаления несуществующей переменной."""
+    app = TinyDB()
+
+    app.do_UNSET("A")
+
+    captured = capsys.readouterr()
+    assert "" in captured.out
