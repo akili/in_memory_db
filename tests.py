@@ -150,3 +150,19 @@ COUNTS 10""",
 
     captured = capsys.readouterr()
     assert "3" in captured.out
+
+
+def test_find(capsys: CaptureFixture) -> None:
+    """Проверка подсчета значений."""
+    run_multiple_commands(
+        """
+SET A 10
+SET B 10
+SET C 20
+BEGIN
+SET D 10
+FIND 10""",
+    )
+
+    captured = capsys.readouterr()
+    assert "A B D" in captured.out

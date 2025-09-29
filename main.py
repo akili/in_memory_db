@@ -103,6 +103,15 @@ class TinyDB(cmd.Cmd):
                     cnt += 1
         print(cnt)
 
+    def do_FIND(self, searced_value: str) -> None:
+        """Поиск ключей по значению."""
+        keys = []
+        for layer in self.storage:
+            for key, value in layer.items():
+                if value == searced_value:
+                    keys.append(key)
+        print(" ".join(keys))
+
 
 if __name__ == "__main__":
     TinyDB().run()
