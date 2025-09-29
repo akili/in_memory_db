@@ -8,22 +8,27 @@ class TinyDB:
 
     NULL = "NULL"
 
+    @property
+    def upper_data_layer(self) -> dict:
+        """Получение слоя данных или данныx самой верхней транзакции."""
+        return self._storage[-1]
+
     def __init__(self) -> None:
         self._storage = [{}]
 
     def set(self, key: str, value: str) -> None:
         """Установить значение переменной."""
-        self._storage[-1][key] = value
+        self.upper_data_layer[key] = value
 
     def unset(self, key: str) -> None:
         """Удаление переменной."""
         if len(self._storage) == 1:
             with suppress(KeyError):
-                del self._storage[-1][key]
+                del self.upper_data_layer[key]
         else:
             # мы внутри транзакции, если ключ просто удалить, при коммите
             # действие потеряется, поэтому помечаем его нулом
-            self._storage[-1][key] = self.NULL
+            self.upper_data_layer[key] = self.NULL
 
     def get(self, key: str) -> str:
         """Получить значение переменной."""
@@ -51,9 +56,9 @@ class TinyDB:
         for key, value in self._storage.pop().items():
             if value == self.NULL:
                 with suppress(KeyError):
-                    del self._storage[-1][key]
+                    del self.upper_data_layer[key]
             else:
-                self._storage[-1][key] = value
+                self.upper_data_layer[key] = value
 
     def counts(self, searched_value: str) -> int:
         """Подсчет сколько раз данные значение встретились в базе данных."""
