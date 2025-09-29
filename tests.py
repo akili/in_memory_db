@@ -124,12 +124,6 @@ def test_unset_undefined_var(capsys: CaptureFixture) -> None:
 
 def test_unset_in_transaction(capsys: CaptureFixture) -> None:
     """Проверка удаления переменной внутри транзакции."""
-    app = TinyDB()
-
-    app.do_UNSET("A")
-
-    captured = capsys.readouterr()
-    assert "" in captured.out
     run_multiple_commands(
         """
 BEGIN
@@ -141,3 +135,18 @@ GET A""",
 
     captured = capsys.readouterr()
     assert "NULL" in captured.out
+
+
+def test_count(capsys: CaptureFixture) -> None:
+    """Проверка подсчета значений."""
+    run_multiple_commands(
+        """
+SET A 10
+SET B 10
+BEGIN
+SET C 10
+COUNTS 10""",
+    )
+
+    captured = capsys.readouterr()
+    assert "3" in captured.out

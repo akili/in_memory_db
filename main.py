@@ -91,8 +91,17 @@ class TinyDB(cmd.Cmd):
                 del self.storage[-1][key]
         else:
             # мы внутри транзакции, если ключ просто удалить, при коммите
-            # действие потеряется, поэтому просто помечаем его нулом
+            # действие потеряется, поэтому помечаем его нулом
             self.storage[-1][key] = self.NULL
+
+    def do_COUNTS(self, searched_value: str) -> None:
+        """Подсчет сколько раз данные значение встретились в базе данных."""
+        cnt = 0
+        for layer in self.storage:
+            for var_value in layer.values():
+                if var_value == searched_value:
+                    cnt += 1
+        print(cnt)
 
 
 if __name__ == "__main__":
