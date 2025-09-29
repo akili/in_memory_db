@@ -4,8 +4,8 @@ import sys
 import pytest
 from _pytest.capture import CaptureFixture
 
-from exceptions import UserInputError
-from main import TinyDBCli
+from .cli import TinyDBCli
+from .exceptions import UserInputError
 
 
 def run_multiple_commands(commands: str) -> None:

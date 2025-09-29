@@ -13,4 +13,4 @@ check:
 	uv run flake8 .
 
 test:
-	uv run pytest tests.py
+	uv run pytest src/tests.py

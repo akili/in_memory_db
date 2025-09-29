@@ -1,7 +1,7 @@
 from functools import wraps
 from typing import Callable
 
-from exceptions import UserInputError
+from .exceptions import UserInputError
 
 
 def command_need_arguments(required: int) -> Callable:

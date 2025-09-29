@@ -8,7 +8,7 @@ exclude = [
 
 [lint.per-file-ignores]
 "tests.py" = ["S101"]
-"main.py" = ["N802"]
+"src/cli.py" = ["N802"]
 
 
 [lint]

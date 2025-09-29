@@ -1,6 +1,6 @@
 from contextlib import suppress
 
-from exceptions import StorageLogicError
+from .exceptions import StorageLogicError
 
 
 class TinyDB:
