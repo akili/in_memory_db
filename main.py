@@ -1,6 +1,19 @@
 import cmd
 from contextlib import suppress
-from typing import Any
+from functools import wraps
+from typing import Any, Callable
+
+
+def command_need_argument(func: Callable) -> Callable:
+    """Проверяем, что в команды передаются аргументы."""
+
+    @wraps(func)
+    def wrapper(*args: tuple) -> Callable:
+        if not len(args[1]):
+            raise RuntimeError("Ввeдите, пожалуйста, аргумент для команды")
+        return func(*args)
+
+    return wrapper
 
 
 class TinyDB(cmd.Cmd):
@@ -52,6 +65,7 @@ class TinyDB(cmd.Cmd):
             ) from err
         self.storage[-1][db_key] = key_value
 
+    @command_need_argument
     def do_GET(self, key: str) -> None:
         """Получить значение переменной."""
         for layer in reversed(self.storage):
@@ -84,6 +98,7 @@ class TinyDB(cmd.Cmd):
             else:
                 self.storage[-1][key] = value
 
+    @command_need_argument
     def do_UNSET(self, key: str) -> None:
         """Удаление переменной."""
         if len(self.storage) == 1:
@@ -94,6 +109,7 @@ class TinyDB(cmd.Cmd):
             # действие потеряется, поэтому помечаем его нулом
             self.storage[-1][key] = self.NULL
 
+    @command_need_argument
     def do_COUNTS(self, searched_value: str) -> None:
         """Подсчет сколько раз данные значение встретились в базе данных."""
         cnt = 0
@@ -103,10 +119,12 @@ class TinyDB(cmd.Cmd):
                     cnt += 1
         print(cnt)
 
+    @command_need_argument
     def do_FIND(self, searced_value: str) -> None:
         """Поиск ключей по значению."""
         keys = []
-        for layer in self.storage:
+        # reversed, чтобы переменныe в транзакции шли первыми
+        for layer in reversed(self.storage):
             for key, value in layer.items():
                 if value == searced_value:
                     keys.append(key)

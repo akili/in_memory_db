@@ -1,6 +1,7 @@
 import io
 import sys
 
+import pytest
 from _pytest.capture import CaptureFixture
 
 from main import TinyDB
@@ -165,4 +166,14 @@ FIND 10""",
     )
 
     captured = capsys.readouterr()
-    assert "A B D" in captured.out
+    assert "D A B" in captured.out
+
+
+def test_command_need_argument_decorator() -> None:
+    """Проверка декоратора, следящего за передачей аргумента в команду."""
+    app = TinyDB()
+
+    with pytest.raises(RuntimeError) as excinfo:
+        app.do_UNSET("")
+
+    assert "Ввeдите, пожалуйста, аргумент для команды" in str(excinfo.value)
