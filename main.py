@@ -75,14 +75,24 @@ class TinyDB(cmd.Cmd):
         """Зафиксировать последнюю транзакцию."""
         if len(self.storage) == 1:
             raise RuntimeError("Нет ни одной транзакции для коммита")
-        transaction_data = self.storage.pop()
-        self.storage[-1].update(transaction_data)
+        # Реальные базы редко удаляют что-то сразу, можно было просто слить
+        # нулы и не переживать о потери памяти
+        for key, value in self.storage.pop().items():
+            if value == self.NULL:
+                with suppress(KeyError):
+                    del self.storage[-1][key]
+            else:
+                self.storage[-1][key] = value
 
     def do_UNSET(self, key: str) -> None:
         """Удаление переменной."""
         if len(self.storage) == 1:
             with suppress(KeyError):
                 del self.storage[-1][key]
+        else:
+            # мы внутри транзакции, если ключ просто удалить, при коммите
+            # действие потеряется, поэтому просто помечаем его нулом
+            self.storage[-1][key] = self.NULL
 
 
 if __name__ == "__main__":
