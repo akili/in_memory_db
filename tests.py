@@ -4,12 +4,13 @@ import sys
 import pytest
 from _pytest.capture import CaptureFixture
 
-from main import TinyDB
+from exceptions import UserInputError
+from main import TinyDBCli
 
 
 def run_multiple_commands(commands: str) -> None:
     """Передаем пачку комманд в приложение."""
-    app = TinyDB()
+    app = TinyDBCli()
     stdin_backup = sys.stdin
     sys.stdin = io.StringIO(commands)
     app.cmdloop()
@@ -18,7 +19,7 @@ def run_multiple_commands(commands: str) -> None:
 
 def test_eof_exit(capsys: CaptureFixture) -> None:
     """Проверка работы ctrl+d."""
-    app = TinyDB()
+    app = TinyDBCli()
 
     app.do_EXIT()
 
@@ -28,7 +29,7 @@ def test_eof_exit(capsys: CaptureFixture) -> None:
 
 def test_set(capsys: CaptureFixture) -> None:
     """Проверка установки и получения переменной."""
-    app = TinyDB()
+    app = TinyDBCli()
 
     app.do_SET("A 123")
     app.do_GET("A")
@@ -39,7 +40,7 @@ def test_set(capsys: CaptureFixture) -> None:
 
 def test_get_undefined(capsys: CaptureFixture) -> None:
     """Проверка получения неустановленной переменной."""
-    app = TinyDB()
+    app = TinyDBCli()
 
     app.do_GET("A")
 
@@ -101,7 +102,7 @@ GET A
 
 def test_unset(capsys: CaptureFixture) -> None:
     """Проверка получения переменной."""
-    app = TinyDB()
+    app = TinyDBCli()
 
     app.do_SET("A 222")
     app.do_GET("A")
@@ -115,7 +116,7 @@ def test_unset(capsys: CaptureFixture) -> None:
 
 def test_unset_undefined_var(capsys: CaptureFixture) -> None:
     """Проверка удаления несуществующей переменной."""
-    app = TinyDB()
+    app = TinyDBCli()
 
     app.do_UNSET("A")
 
@@ -171,9 +172,9 @@ FIND 10""",
 
 def test_command_need_argument_decorator() -> None:
     """Проверка декоратора, следящего за передачей аргумента в команду."""
-    app = TinyDB()
+    app = TinyDBCli()
 
-    with pytest.raises(RuntimeError) as excinfo:
+    with pytest.raises(UserInputError) as excinfo:
         app.do_UNSET("")
 
-    assert "Ввeдите, пожалуйста, аргумент для команды" in str(excinfo.value)
+    assert "для команды не хватает 1 аргумент(а/ов)" in str(excinfo.value)
