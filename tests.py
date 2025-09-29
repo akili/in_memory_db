@@ -25,18 +25,8 @@ def test_eof_exit(capsys: CaptureFixture) -> None:
     assert "Пока!" in captured.out
 
 
-def test_get_command(capsys: CaptureFixture) -> None:
-    """Проверка установки переменной."""
-    app = TinyDB()
-
-    app.do_GET("A")
-
-    captured = capsys.readouterr()
-    assert "NULL" in captured.out
-
-
 def test_set_command(capsys: CaptureFixture) -> None:
-    """Проверка получения переменной."""
+    """Проверка установки и получения переменной."""
     app = TinyDB()
 
     app.do_SET("A 123")
@@ -44,6 +34,16 @@ def test_set_command(capsys: CaptureFixture) -> None:
 
     captured = capsys.readouterr()
     assert "123" in captured.out
+
+
+def test_get_undefined_command(capsys: CaptureFixture) -> None:
+    """Проверка получения неустановленной переменной."""
+    app = TinyDB()
+
+    app.do_GET("A")
+
+    captured = capsys.readouterr()
+    assert "NULL" in captured.out
 
 
 def test_simple_transaction(capsys: CaptureFixture) -> None:
