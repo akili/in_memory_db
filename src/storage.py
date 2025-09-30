@@ -1,3 +1,4 @@
+from collections import ChainMap
 from contextlib import suppress
 
 from .exceptions import StorageLogicError
@@ -55,19 +56,18 @@ class TinyDB:
         # нулы и не переживать о потери памяти
         for key, value in self._storage.pop().items():
             if value == self.NULL:
-                with suppress(KeyError):
-                    del self.upper_data_layer[key]
+                if len(self._storage) == 1:
+                    with suppress(KeyError):
+                        del self.upper_data_layer[key]
+                else:
+                    self.upper_data_layer[key] = value
             else:
                 self.upper_data_layer[key] = value
 
     def counts(self, searched_value: str) -> int:
         """Подсчет сколько раз данные значение встретились в базе данных."""
-        cnt = 0
-        for layer in self._storage:
-            for var_value in layer.values():
-                if var_value == searched_value:
-                    cnt += 1
-        return cnt
+        merged = ChainMap(*reversed(self._storage))
+        return len([k for k, v in merged.items() if v == searched_value])
 
     def find(self, searced_value: str) -> str:
         """Поиск ключей по значению."""

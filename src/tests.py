@@ -178,3 +178,35 @@ def test_command_need_argument_decorator() -> None:
         app.do_UNSET("")
 
     assert "для команды не хватает 1 аргумент(а/ов)" in str(excinfo.value)
+
+
+def test_counts_after_unset(capsys: CaptureFixture) -> None:
+    """Проверка подсчета вхождений после удаления переменной."""
+    run_multiple_commands(
+        """
+SET A 10
+SET B 10
+BEGIN
+UNSET B
+COUNTS 10""",
+    )
+
+    captured = capsys.readouterr()
+    assert "1" in captured.out
+
+
+def test_unset_in_two_layer_transaction(capsys: CaptureFixture) -> None:
+    """Проверка получениея переменной внутри транзакци, после ансета выше."""
+    run_multiple_commands(
+        """
+SET A 10
+BEGIN
+SET A 20
+BEGIN
+UNSET A
+COMMIT
+GET A""",
+    )
+
+    captured = capsys.readouterr()
+    assert "NULL" in captured.out
